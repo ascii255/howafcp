@@ -1,0 +1,34 @@
+{
+    "name": "Emscripten",
+    "image": "emscripten/emsdk:latest",
+    "remoteEnv": {
+        "EMSDK": "/emsdk",
+        "EMSCRIPTEN": "/emsdk/upstream/emscripten",
+        "PATH": "/emsdk/upstream/emscripten:/emsdk/upstream/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "dtsvet.vscode-wasm"
+            ],
+            "settings": {
+                "C_Cpp.default.compilerPath": "/emsdk/upstream/emscripten/emcc",
+                "C_Cpp.default.cStandard": "c17",
+                "C_Cpp.default.cppStandard": "c++17",
+                "C_Cpp.default.intelliSenseEngine": "default",
+                "C_Cpp.default.intelliSenseMode": "clang-x64",
+                "C_Cpp.default.includePath": [
+                    "${workspaceFolder}/**",
+                    "/emsdk/upstream/emscripten/cache/sysroot/include",
+                    "/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1",
+                    "/emsdk/upstream/lib/clang/17/include"
+                ],
+                "C_Cpp.default.defines": [
+                    "__EMSCRIPTEN__",
+                    "__wasm__"
+                ]
+            }
+        }
+    }
+}
