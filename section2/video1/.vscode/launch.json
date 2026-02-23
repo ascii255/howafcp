@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "WASM Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/root/.wasmtime/bin/wasmtime",
+            "args": [
+                "--debug=debug-info",
+                "${workspaceFolder}/main.wasm"
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build-wasm-cpp-debug"
+        },
+        {
+            "name": "Node Debug",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.js",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "preLaunchTask": "build-wasm-node-debug"
+        }
+    ]
+}

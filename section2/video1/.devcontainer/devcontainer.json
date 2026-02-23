@@ -1,16 +1,17 @@
 {
     "name": "Emscripten",
     "image": "emscripten/emsdk:latest",
+    "postCreateCommand": "apt-get update && apt-get install -y gdb npm && npm i -g node && curl https://wasmtime.dev/install.sh -sSf | bash",
     "remoteEnv": {
         "EMSDK": "/emsdk",
         "EMSCRIPTEN": "/emsdk/upstream/emscripten",
-        "PATH": "/emsdk/upstream/emscripten:/emsdk/upstream/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        "PATH": "/root/.wasmtime/bin:/emsdk/upstream/emscripten:/emsdk/upstream/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     },
     "customizations": {
         "vscode": {
             "extensions": [
                 "ms-vscode.cpptools",
-                "dtsvet.vscode-wasm"
+                "ms-vscode.wasm-dwarf-debugging"
             ],
             "settings": {
                 "C_Cpp.default.compilerPath": "/emsdk/upstream/emscripten/emcc",
@@ -27,7 +28,8 @@
                 "C_Cpp.default.defines": [
                     "__EMSCRIPTEN__",
                     "__wasm__"
-                ]
+                ],
+                "debug.javascript.wasmDWARFDebugging": true
             }
         }
     }
