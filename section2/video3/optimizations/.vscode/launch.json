@@ -1,0 +1,53 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "WASM Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/root/.wasmtime/bin/wasmtime",
+            "args": [
+                "--debug=debug-info",
+                "${workspaceFolder}/main.wasm"
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build-wasm-cpp-debug"
+        },
+        {
+            "name": "WASM Release",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/root/.wasmtime/bin/wasmtime",
+            "args": [
+                "${workspaceFolder}/main.wasm"
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build-wasm-cpp-release"
+        },
+        {
+            "name": "JavaScript Debug",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.js",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "preLaunchTask": "build-wasm-node-debug"
+        },
+        {
+            "name": "HTML Debug",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:8080/main.html",
+            "runtimeExecutable": "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            "preLaunchTask": "run-emrun-server-debug"
+        },
+        {
+            "name": "HTML Release",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:8080/main.html",
+            "runtimeExecutable": "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            "preLaunchTask": "run-emrun-server-release"
+        }
+    ]
+}

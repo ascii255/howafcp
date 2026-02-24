@@ -1,0 +1,225 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-wasm-cpp-debug",
+            "type": "shell",
+            "command": "em++",
+            "args": [
+                "quicksort.cpp",
+                "-g",
+                "-s",
+                "PURE_WASI=1",
+                "-o",
+                "main.wasm",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "build-wasm-cpp-release",
+            "type": "shell",
+            "command": "em++",
+            "args": [
+                "quicksort.cpp",
+                "-O3",
+                "-s",
+                "PURE_WASI=1",
+                "-o",
+                "main.wasm",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "build-wasm-node-debug",
+            "type": "shell",
+            "command": "em++",
+            "args": [
+                "quicksort.cpp",
+                "-g",
+                "-o",
+                "main.js"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "build-wasm-node-release",
+            "type": "shell",
+            "command": "em++",
+            "args": [
+                "quicksort.cpp",
+                "-O3",
+                "-o",
+                "main.js"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "run-wasm-node-release",
+            "type": "shell",
+            "command": "node",
+            "args": [
+                "main.js"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "dependsOn": [
+                "build-wasm-node-release"
+            ]
+        },
+        {
+            "label": "build-wasm-html-debug",
+            "type": "shell",
+            "command": "em++",
+            "args": [
+                "--emrun",
+                "quicksort.cpp",
+                "-gseparate-dwarf=main.wasm.dwp",
+                "-o",
+                "main.html"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "touch-dwp-dummy",
+            "type": "shell",
+            "command": "touch",
+            "args": [
+                "main.wasm.dwp"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "build-wasm-html-release",
+            "type": "shell",
+            "command": "em++",
+            "args": [
+                "--emrun",
+                "quicksort.cpp",
+                "-O3",
+                "-o",
+                "main.html"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "dependsOn": [
+                "touch-dwp-dummy"
+            ]
+        },
+        {
+            "label": "run-emrun-server-debug",
+            "type": "shell",
+            "command": "emrun",
+            "args": [
+                "--no_browser",
+                "--port",
+                "8080",
+                "${workspaceFolder}"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "^Now listening at (.+)$",
+                        "file": 1,
+                        "line": 1,
+                        "column": 1,
+                        "message": 1
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*$",
+                    "endsPattern": "^Now listening at (.+)$"
+                }
+            },
+            "dependsOn": [
+                "build-wasm-html-debug"
+            ]
+        },
+        {
+            "label": "run-emrun-server-release",
+            "type": "shell",
+            "command": "emrun",
+            "args": [
+                "--no_browser",
+                "--port",
+                "8080",
+                "${workspaceFolder}"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "^Now listening at (.+)$",
+                        "file": 1,
+                        "line": 1,
+                        "column": 1,
+                        "message": 1
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*$",
+                    "endsPattern": "^Now listening at (.+)$"
+                }
+            },
+            "dependsOn": [
+                "build-wasm-html-release"
+            ]
+        }
+    ]
+}
