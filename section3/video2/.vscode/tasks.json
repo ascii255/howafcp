@@ -1,0 +1,40 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-wasm",
+            "type": "shell",
+            "command": "clang++",
+            "args": [
+                "${STEM_INPUT}.cpp",
+                "-Oz",
+                "--target=wasm32",
+                "-nostdlib",
+                "-Wl,--no-entry",
+                "-Wl,--export=factorial",
+                "-o${STEM_OUTPUT}.wasm"
+            ],
+            "presentation": {
+                "close": true,
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "generate-wat",
+            "type": "shell",
+            "command": "wasm-opt",
+            "args": [
+                "${STEM_OUTPUT}.wasm",
+                "--print",
+                ">${STEM_OUTPUT}.wat"
+            ],
+            "presentation": {
+                "close": true,
+                "reveal": "silent"
+            },
+            "dependsOn": [
+                "build-wasm"
+            ]
+        }
+    ]
+}

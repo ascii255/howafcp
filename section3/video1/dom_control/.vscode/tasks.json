@@ -2,50 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build-wasm-cpp-debug",
-            "type": "shell",
-            "command": "/opt/wasi-sdk/bin/clang++",
-            "args": [
-                "hello_world.cpp",
-                "--sysroot=/opt/wasi-sdk/share/wasi-sysroot",
-                "-g",
-                "-fno-exceptions",
-                "-o",
-                "main.wasm",
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "build-wasm-cpp-release",
-            "type": "shell",
-            "command": "/opt/wasi-sdk/bin/clang++",
-            "args": [
-                "hello_world.cpp",
-                "--sysroot=/opt/wasi-sdk/share/wasi-sysroot",
-                "-O3",
-                "-fno-exceptions",
-                "-o",
-                "main.wasm",
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "build-wasm-node-debug",
+            "label": "build-wasm-js-debug",
             "type": "shell",
             "command": "emcc",
             "args": [
-                "hello_world.cpp",
+                "${STEM_INPUT}.cpp",
+                "--bind",
                 "-g",
                 "-sASSERTIONS",
                 "-sSAFE_HEAP",
                 "-o",
-                "main.js"
+                "${STEM_OUTPUT}.js"
             ],
             "presentation": {
                 "close": true,
@@ -53,46 +20,45 @@
             }
         },
         {
-            "label": "build-wasm-node-release",
+            "label": "touch-dwp-dummy",
+            "type": "shell",
+            "command": "touch",
+            "args": [
+                "${STEM_OUTPUT}.wasm.dwp"
+            ],
+            "presentation": {
+                "close": true,
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "build-wasm-js-release",
             "type": "shell",
             "command": "emcc",
             "args": [
-                "hello_world.cpp",
+                "${STEM_INPUT}.cpp",
+                "--bind",
                 "-O3",
                 "-o",
-                "main.js"
+                "${STEM_OUTPUT}.js"
             ],
             "presentation": {
                 "close": true,
                 "reveal": "silent"
-            }
-        },
-        {
-            "label": "run-wasm-node-release",
-            "type": "shell",
-            "command": "node",
-            "args": [
-                "main.js"
-            ],
-            "presentation": {
-                "reveal": "always"
             },
             "dependsOn": [
-                "build-wasm-node-release"
+                "touch-dwp-dummy"
             ]
         },
         {
-            "label": "build-wasm-html-debug",
+            "label": "generate-wat",
             "type": "shell",
-            "command": "emcc",
+            "command": "wasm-opt",
             "args": [
-                "hello_world.cpp",
-                "-g",
-                "-sASSERTIONS",
-                "-sSAFE_HEAP",
-                "-o",
-                "main.html",
-                "--emrun"
+                "${STEM_OUTPUT}.wasm",
+                "--print",
+                ">",
+                "${STEM_OUTPUT}.wat"
             ],
             "presentation": {
                 "close": true,
@@ -100,20 +66,21 @@
             }
         },
         {
-            "label": "build-wasm-html-release",
+            "label": "strip-wasm-js-release",
             "type": "shell",
-            "command": "emcc",
+            "command": "wasm-opt",
             "args": [
-                "hello_world.cpp",
-                "-O3",
+                "-O4",
+                "--enable-bulk-memory",
+                "--strip-debug",
+                "--strip-producers",
+                "${STEM_OUTPUT}.wasm",
                 "-o",
-                "main.html",
-                "--emrun"
+                "${STEM_OUTPUT}.wasm"
             ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
+            "dependsOn": [
+                "build-wasm-js-release",
+            ]
         },
         {
             "label": "run-emrun-server",
@@ -149,7 +116,7 @@
         {
             "label": "build-and-serve-html-debug",
             "dependsOn": [
-                "build-wasm-html-debug",
+                "build-wasm-js-debug",
                 "run-emrun-server"
             ],
             "dependsOrder": "sequence"
@@ -157,7 +124,8 @@
         {
             "label": "build-and-serve-html-release",
             "dependsOn": [
-                "build-wasm-html-release",
+                "build-wasm-js-release",
+                "strip-wasm-js-release",
                 "run-emrun-server"
             ],
             "dependsOrder": "sequence"

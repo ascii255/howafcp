@@ -1,14 +1,11 @@
 {
     "name": "Emscripten",
     "image": "emscripten/emsdk:latest",
-    "postCreateCommand": [
-        "bash",
-        ".devcontainer/postCreate.sh"
-    ],
+    "postCreateCommand": "apt-get update && apt-get install -y gdb npm && npm i -g node && curl https://wasmtime.dev/install.sh -sSf | bash",
     "remoteEnv": {
         "EMSDK": "/emsdk",
         "EMSCRIPTEN": "/emsdk/upstream/emscripten",
-        "PATH": "/emsdk/upstream/emscripten:/emsdk/upstream/bin:${containerEnv:PATH}"
+        "PATH": "/root/.wasmtime/bin:/emsdk/upstream/emscripten:/emsdk/upstream/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     },
     "customizations": {
         "vscode": {

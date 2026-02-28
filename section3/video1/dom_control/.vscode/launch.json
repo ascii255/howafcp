@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "HTML Debug",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:8080/pong.html",
+            "runtimeExecutable": "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            "preLaunchTask": "build-and-serve-html-debug",
+            "postDebugTask": "kill-emrun-server"
+        },
+        {
+            "name": "HTML Release",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:8080/pong.html",
+            "runtimeExecutable": "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            "preLaunchTask": "build-and-serve-html-release",
+            "postDebugTask": "kill-emrun-server"
+        }
+    ]
+}

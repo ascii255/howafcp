@@ -1,10 +1,6 @@
 {
     "name": "Emscripten",
     "image": "emscripten/emsdk:latest",
-    "postCreateCommand": [
-        "bash",
-        ".devcontainer/postCreate.sh"
-    ],
     "remoteEnv": {
         "EMSDK": "/emsdk",
         "EMSCRIPTEN": "/emsdk/upstream/emscripten",
@@ -13,7 +9,6 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-vscode.cpptools",
                 "ms-vscode.wasm-dwarf-debugging"
             ],
             "settings": {

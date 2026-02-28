@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.linux": {
+        "STEM_INPUT": "factorial",
+        "STEM_OUTPUT": "factorial"
+    }
+}

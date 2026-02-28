@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.linux": {
+        "STEM_INPUT": "pong",
+        "STEM_OUTPUT": "pong_wasm"
+    }
+}

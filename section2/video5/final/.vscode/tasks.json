@@ -2,50 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build-wasm-cpp-debug",
-            "type": "shell",
-            "command": "/opt/wasi-sdk/bin/clang++",
-            "args": [
-                "hello_world.cpp",
-                "--sysroot=/opt/wasi-sdk/share/wasi-sysroot",
-                "-g",
-                "-fno-exceptions",
-                "-o",
-                "main.wasm",
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "build-wasm-cpp-release",
-            "type": "shell",
-            "command": "/opt/wasi-sdk/bin/clang++",
-            "args": [
-                "hello_world.cpp",
-                "--sysroot=/opt/wasi-sdk/share/wasi-sysroot",
-                "-O3",
-                "-fno-exceptions",
-                "-o",
-                "main.wasm",
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "build-wasm-node-debug",
+            "label": "build-wasm-js-debug",
             "type": "shell",
             "command": "emcc",
             "args": [
-                "hello_world.cpp",
+                "pong.cpp",
+                "--bind",
                 "-g",
                 "-sASSERTIONS",
                 "-sSAFE_HEAP",
                 "-o",
-                "main.js"
+                "pong_wasm.js"
             ],
             "presentation": {
                 "close": true,
@@ -53,67 +20,35 @@
             }
         },
         {
-            "label": "build-wasm-node-release",
+            "label": "touch-dwp-dummy",
+            "type": "shell",
+            "command": "touch",
+            "args": [
+                "pong_wasm.wasm.dwp"
+            ],
+            "presentation": {
+                "close": true,
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "build-wasm-js-release",
             "type": "shell",
             "command": "emcc",
             "args": [
-                "hello_world.cpp",
+                "pong.cpp",
+                "--bind",
                 "-O3",
                 "-o",
-                "main.js"
+                "pong_wasm.js"
             ],
             "presentation": {
                 "close": true,
                 "reveal": "silent"
-            }
-        },
-        {
-            "label": "run-wasm-node-release",
-            "type": "shell",
-            "command": "node",
-            "args": [
-                "main.js"
-            ],
-            "presentation": {
-                "reveal": "always"
             },
             "dependsOn": [
-                "build-wasm-node-release"
+                "touch-dwp-dummy"
             ]
-        },
-        {
-            "label": "build-wasm-html-debug",
-            "type": "shell",
-            "command": "emcc",
-            "args": [
-                "hello_world.cpp",
-                "-g",
-                "-sASSERTIONS",
-                "-sSAFE_HEAP",
-                "-o",
-                "main.html",
-                "--emrun"
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "build-wasm-html-release",
-            "type": "shell",
-            "command": "emcc",
-            "args": [
-                "hello_world.cpp",
-                "-O3",
-                "-o",
-                "main.html",
-                "--emrun"
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
         },
         {
             "label": "run-emrun-server",
@@ -149,7 +84,7 @@
         {
             "label": "build-and-serve-html-debug",
             "dependsOn": [
-                "build-wasm-html-debug",
+                "build-wasm-js-debug",
                 "run-emrun-server"
             ],
             "dependsOrder": "sequence"
@@ -157,7 +92,7 @@
         {
             "label": "build-and-serve-html-release",
             "dependsOn": [
-                "build-wasm-html-release",
+                "build-wasm-js-release",
                 "run-emrun-server"
             ],
             "dependsOrder": "sequence"

@@ -5,13 +5,13 @@
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
 
-EM_JS(void, drawCanvas, (int height, int width), {
+EM_JS(void, drawCanvas, (int width, int height), {
     body = document.getElementsByTagName("body")[0];
     canvas = document.createElement("canvas");
     body.appendChild(canvas);
     canvas.setAttribute("id", "canvas");
-    canvas.setAttribute("height", height);
     canvas.setAttribute("width", width);
+    canvas.setAttribute("height", height);
 });
 
 struct Paddle {
@@ -105,7 +105,7 @@ void makeAIMove(Ball ball, Paddle& leftPaddle) {
 
 
 GameState createInitialGameState(){
-    drawCanvas(600, 800);
+    drawCanvas(800, 600);
     return GameState{};
 }
 
