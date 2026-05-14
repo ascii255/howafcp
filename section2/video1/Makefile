@@ -1,28 +1,68 @@
+STEM    := hello_world
+PORT    := 8080
+EMFLAGS := -O3  # default = release
 
+# ── detect available JS runtime ──────────────────────────────
+NODE    := $(shell which node 2>/dev/null || which nodejs 2>/dev/null || which d8 2>/dev/null)
 
-ifeq ($(DOCKER),1)
+# ────────────────────────────────────────────────────────────
+# Default target
+# ────────────────────────────────────────────────────────────
+.PHONY: all
+all:
+	$(MAKE) EMFLAGS="-O3" $(STEM).html
 
-build: docker-build
-	docker run -v `pwd`:/data:rw -it emscripten ./upstream/emscripten/emcc /data/hello_world.cpp -o /data/test.html --emrun --cache /data/.emscripten --std=c++17
+# ────────────────────────────────────────────────────────────
+# Mode targets
+# ────────────────────────────────────────────────────────────
+.PHONY: release debug
 
-docker-build:
-	docker build -t emscripten .
-run:
-	python3 -m http.server
-clean:
-	docker run -v `pwd`:/data:rw -it emscripten rm -rf /data/test.html /data/test.wasm /data/test.js /data/.emscripten
+release:
+	$(MAKE) EMFLAGS="-O3" $(filter-out $@, $(MAKECMDGOALS))
 
+debug:
+	$(MAKE) EMFLAGS="-g -sASSERTIONS -sSAFE_HEAP" $(filter-out $@, $(MAKECMDGOALS))
 
-else
-check-emscripten:
-	@emcc --version || (echo "Emscripten not detected, aborting build"; exit 1)
+# ────────────────────────────────────────────────────────────
+# Swallow other targets in the top-level mode-dispatch call
+# ────────────────────────────────────────────────────────────
+ifeq ($(filter release debug, $(MAKECMDGOALS)),)
 
-build: check-emscripten
-	@echo "Not running in Docker"
-	emcc hello_world.cpp -o test.html --emrun --std=c++17
-run:
-	emrun test.html
-clean:
-	rm -rf test.* .emscripten
+# ── Sentinel: rebuild whenever EMFLAGS changes ───────────────
+SENTINEL := .emflags.sentinel
+ifneq ($(shell cat $(SENTINEL) 2>/dev/null),$(EMFLAGS))
+$(shell echo '$(EMFLAGS)' > $(SENTINEL))
 endif
 
+.PHONY: js html serve run
+
+js: $(STEM).js
+
+html: $(STEM).html
+
+run: $(STEM).js
+	$(NODE) $<
+
+serve: $(STEM).html
+	emrun --no_browser --port $(PORT) .
+
+$(STEM).js: $(STEM).cpp $(SENTINEL)
+	emcc $< $(EMFLAGS) -o $@
+
+$(STEM).html: $(STEM).cpp $(SENTINEL)
+	emcc $< --emrun $(EMFLAGS) -o $@
+
+else
+
+%:
+	@true
+
+endif
+
+# ────────────────────────────────────────────────────────────
+# Utility
+# ────────────────────────────────────────────────────────────
+.PHONY: clean
+
+clean:
+	rm -f $(STEM).js $(STEM).wasm $(STEM).html $(SENTINEL)

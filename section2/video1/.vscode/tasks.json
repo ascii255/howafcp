@@ -2,129 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build-wasm-cpp-debug",
+            "label": "make debug js",
             "type": "shell",
-            "command": "/opt/wasi-sdk/bin/clang++",
-            "args": [
-                "hello_world.cpp",
-                "--sysroot=/opt/wasi-sdk/share/wasi-sysroot",
-                "-g",
-                "-fno-exceptions",
-                "-o",
-                "main.wasm",
-            ],
+            "command": "make debug js",
             "presentation": {
-                "close": true,
-                "reveal": "silent"
+                "close": true
             }
         },
         {
-            "label": "build-wasm-cpp-release",
+            "label": "make debug serve",
             "type": "shell",
-            "command": "/opt/wasi-sdk/bin/clang++",
-            "args": [
-                "hello_world.cpp",
-                "--sysroot=/opt/wasi-sdk/share/wasi-sysroot",
-                "-O3",
-                "-fno-exceptions",
-                "-o",
-                "main.wasm",
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "build-wasm-node-debug",
-            "type": "shell",
-            "command": "emcc",
-            "args": [
-                "hello_world.cpp",
-                "-g",
-                "-sASSERTIONS",
-                "-sSAFE_HEAP",
-                "-o",
-                "main.js"
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "build-wasm-node-release",
-            "type": "shell",
-            "command": "emcc",
-            "args": [
-                "hello_world.cpp",
-                "-O3",
-                "-o",
-                "main.js"
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "run-wasm-node-release",
-            "type": "shell",
-            "command": "node",
-            "args": [
-                "main.js"
-            ],
-            "presentation": {
-                "reveal": "always"
-            },
-            "dependsOn": [
-                "build-wasm-node-release"
-            ]
-        },
-        {
-            "label": "build-wasm-html-debug",
-            "type": "shell",
-            "command": "emcc",
-            "args": [
-                "hello_world.cpp",
-                "-g",
-                "-sASSERTIONS",
-                "-sSAFE_HEAP",
-                "-o",
-                "main.html",
-                "--emrun"
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "build-wasm-html-release",
-            "type": "shell",
-            "command": "emcc",
-            "args": [
-                "hello_world.cpp",
-                "-O3",
-                "-o",
-                "main.html",
-                "--emrun"
-            ],
-            "presentation": {
-                "close": true,
-                "reveal": "silent"
-            }
-        },
-        {
-            "label": "run-emrun-server",
-            "type": "shell",
-            "command": "emrun",
-            "args": [
-                "--no_browser",
-                "--port",
-                "8080",
-                "${workspaceFolder}"
-            ],
+            "command": "make debug serve",
             "presentation": {
                 "close": true
             },
@@ -147,34 +35,36 @@
             }
         },
         {
-            "label": "build-and-serve-html-debug",
-            "dependsOn": [
-                "build-wasm-html-debug",
-                "run-emrun-server"
-            ],
-            "dependsOrder": "sequence"
-        },
-        {
-            "label": "build-and-serve-html-release",
-            "dependsOn": [
-                "build-wasm-html-release",
-                "run-emrun-server"
-            ],
-            "dependsOrder": "sequence"
-        },
-        {
-            "label": "kill-emrun-server",
+            "label": "make serve",
             "type": "shell",
-            "command": "pkill",
-            "args": [
-                "-f",
-                "emrun",
-                "||",
-                "true"
-            ],
+            "command": "make serve",
             "presentation": {
-                "close": true,
-                "reveal": "silent"
+                "close": true
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "$^",
+                        "file": 1,
+                        "line": 1,
+                        "column": 1,
+                        "message": 1
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*$",
+                    "endsPattern": "^Now listening at (.+)$"
+                }
+            }
+        },
+        {
+            "label": "kill",
+            "type": "shell",
+            "command": "pkill -f emrun || true",
+            "presentation": {
+                "close": true
             }
         }
     ]

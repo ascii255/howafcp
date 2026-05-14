@@ -1,5 +1,5 @@
+.emflags.sentinel
 *.html
 *.js
 *.wasm
-*.wasm.dwp
 *.wat

@@ -2,54 +2,31 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "WASM Debug",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "/root/.wasmtime/bin/wasmtime",
-            "args": [
-                "--debug=debug-info",
-                "${workspaceFolder}/main.wasm"
-            ],
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "build-wasm-cpp-debug"
-        },
-        {
-            "name": "WASM Release",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "/root/.wasmtime/bin/wasmtime",
-            "args": [
-                "${workspaceFolder}/main.wasm"
-            ],
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "build-wasm-cpp-release"
-        },
-        {
             "name": "JavaScript Debug",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceFolder}/main.js",
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "preLaunchTask": "build-wasm-node-debug"
+            "program": "${workspaceFolder}/hello_world.js",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "preLaunchTask": "make debug js"
         },
         {
             "name": "HTML Debug",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:8080/main.html",
+            "url": "http://localhost:8080/hello_world.html",
             "runtimeExecutable": "/Applications/Chromium.app/Contents/MacOS/Chromium",
-            "preLaunchTask": "build-and-serve-html-debug",
-            "postDebugTask": "kill-emrun-server"
+            "preLaunchTask": "make debug serve",
+            "postDebugTask": "kill"
         },
         {
             "name": "HTML Release",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:8080/main.html",
+            "url": "http://localhost:8080/hello_world.html",
             "runtimeExecutable": "/Applications/Chromium.app/Contents/MacOS/Chromium",
-            "preLaunchTask": "build-and-serve-html-release",
-            "postDebugTask": "kill-emrun-server"
+            "preLaunchTask": "make serve",
+            "postDebugTask": "kill"
         }
     ]
 }
